@@ -1,0 +1,7 @@
+bitbake-cookerdaemon.log
+cache
+conf/sanity_info
+downloads
+sstate-cache
+tmp
+workspace
