@@ -1,6 +1,27 @@
 # raspberrypi_conf
 Build configuration for poky on the raspberrypi
 
+# Mount external hard drive with SSTATE and Download data
+
+It is assumed that the directory /media/external_500 exists and contains the SSTATE cache and Downloads directories for the yocto build. In my setup I have this stored on an external 500 GB drive. This is hard coded in the conf/local.conf file and can be changed.
+
+```bash
+sudo mkdir /media/external_500
+sudo chown -R $(id -u):$(id -u) /media/external_500/
+```
+
+Check the UUID of the hard drive.
+
+```bash
+sudo blkid
+```
+
+Add the device to the fstab file.
+
+```bash
+UUID=bc3040c9-ae5a-4ffc-93ab-466ca2444616 /media/external_500 ext4 rw,auto,nofail 0 0
+```
+
 # How to build Raspberry Pi Image
 bitbake rpi-basic
 
@@ -34,7 +55,15 @@ sudo mount -o loop,offset=276824064 rpi_image280914 rpi_partition2/
 bitbake rpi-basic -c populate_sdk
 
 # How to use the SDK
-source tmp/deploy/sdk/poky-glibc-x86_64-rpi-basic-cortexa7t2hf-neon-vfpv4-toolchain-2.6.1.sh
+./tmp/deploy/sdk/poky-glibc-x86_64-rpi-basic-cortexa7t2hf-neon-vfpv4-toolchain-2.6.1.sh
+
+# How to modify the kernel source
+
+See notes [here](https://www.yoctoproject.org/docs/2.5/kernel-dev/kernel-dev.html#kernel-dev-common). However you cannot use linux-yocto, this must be replaced with linux-raspberrypi.
+
+```bash
+devtool modify linux-raspberrypi
+```
 
 # Setup Eclipse
 Version 4.8
